@@ -8,10 +8,12 @@ import PlayerScreen from './components/PlayerScreen';
 import DoneScreen from './components/DoneScreen';
 import DoctorPinScreen from './components/DoctorPinScreen';
 import DoctorView from './components/DoctorView';
+import DemoBanner from './components/DemoBanner';
 
 const LOOKUP_TIMEOUT_MS = Number(import.meta.env.VITE_IDLE_TIMEOUT_LOOKUP || 60) * 1000;
 const PLAYER_TIMEOUT_MS = Number(import.meta.env.VITE_IDLE_TIMEOUT_PLAYER || 120) * 1000;
 const DOCTOR_TIMEOUT_MS = Number(import.meta.env.VITE_IDLE_TIMEOUT_DOCTOR || 180) * 1000;
+const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true';
 
 export default function App() {
   const [screen, setScreen] = useState('keypad'); // keypad | lookup | player | done | doctor-pin | doctor
@@ -126,6 +128,7 @@ export default function App() {
   if (libraryError) {
     return (
       <div id="app">
+        {DEMO_MODE && <DemoBanner />}
         <div className="screen centered">
           <div className="prompt-title">Can&apos;t connect</div>
           <div className="prompt-sub">{libraryError}</div>
@@ -137,6 +140,7 @@ export default function App() {
   if (!library) {
     return (
       <div id="app">
+        {DEMO_MODE && <DemoBanner />}
         <div className="screen centered">
           <div className="loading-note">Loading…</div>
         </div>
@@ -146,6 +150,7 @@ export default function App() {
 
   return (
     <div id="app">
+      {DEMO_MODE && <DemoBanner />}
       {screen === 'keypad' && (
         <KeypadScreen onSubmitCode={handleSubmitCode} error={codeError} onOpenDoctorPin={() => setScreen('doctor-pin')} />
       )}

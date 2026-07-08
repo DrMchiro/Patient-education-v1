@@ -7,6 +7,13 @@ through a PIN-gated view. Built from `patient-education-kiosk.html`
 prototype, re-architected around YouTube-hosted video and a real database
 so a doctor's changes on one device reach the kiosk on another.
 
+> **This is a stress-test build, not a live clinical deployment.** There is
+> no real patient data or real video content in this repo — `supabase/seed.sql`
+> is entirely demo data (see below), and the app shows a persistent
+> "DEMO / TEST DATA" banner (`VITE_DEMO_MODE=true`) until that's turned off.
+> The goal right now is to validate the UX and progression logic end to
+> end, not to hold anything real.
+
 ## Stack
 
 - **React + Vite** — single-page app, three patient screens + a doctor view,
@@ -27,15 +34,20 @@ so a doctor's changes on one device reach the kiosk on another.
 2. In the Supabase SQL editor, run in order:
    - `supabase/schema.sql` — tables, RLS policies, the `complete_video`
      function.
-   - `supabase/seed.sql` — demo content library (replace `youtube_id`
-     values with your real unlisted video IDs before going live) and two
-     demo patients.
+   - `supabase/seed.sql` — demo content library and 9 demo patients
+     covering every phase/queue/scheduled state, for stress-testing the
+     flow end to end. All demo videos point at the same real, short,
+     public YouTube clip so playback actually works during testing; all
+     demo patient names are prefixed `[DEMO]`. Replace every `youtube_id`
+     with your real unlisted video IDs, and delete the demo patients,
+     before any real use.
    - `supabase/generate_codes.sql` — pre-provisions a pool of blank
      4-digit patient codes (see "Check-in workflow" below). Adjust the
      range before running in production.
 3. Copy `.env.example` to `.env`, fill in your Supabase project URL/anon
    key (Project Settings → API), and set `VITE_STAFF_PIN` to your practice's
-   shared doctor PIN.
+   shared doctor PIN. Leave `VITE_DEMO_MODE=true` while testing; set it to
+   `false` once real content and real patients are in the database.
 4. `npm install`
 5. `npm run dev` for local development, `npm run build` to produce a
    static `dist/` you can host anywhere (Vercel/Netlify/Cloudflare Pages/S3
